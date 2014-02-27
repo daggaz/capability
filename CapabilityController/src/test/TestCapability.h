@@ -17,10 +17,14 @@ using namespace std;
 class TestCapability : public ICapability {
 private:
 	string name;
-public:
 	TestCapability(string name);
+public:
 	const string& getName() const;
 	virtual string toString() const;
+
+	static TestCapability A;
+	static TestCapability B;
+	static TestCapability C;
 };
 
 #endif /* TESTCAPABILITY_H_ */

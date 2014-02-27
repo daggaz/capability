@@ -19,3 +19,7 @@ const string& TestCapability::getName() const {
 string TestCapability::toString() const {
 	return getName();
 }
+
+TestCapability TestCapability::A("A");
+TestCapability TestCapability::B("B");
+TestCapability TestCapability::C("C");

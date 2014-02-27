@@ -57,4 +57,5 @@ void CapabilityController::changeCapability(const ICapability& capability, const
 		completed.push_back(complete);
 	}
 	currentCapabilty = &capability;
+	cout << "Capability changed to " << capability.toString() << endl;
 }
