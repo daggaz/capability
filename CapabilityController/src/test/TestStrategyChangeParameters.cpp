@@ -7,3 +7,11 @@
 
 #include "TestStrategyChangeParameters.h"
 
+TestStrategyChangeParameters::TestStrategyChangeParameters(const ChangeAt& changeAt) : changeAt(changeAt)
+{
+}
+
+const ChangeAt& TestStrategyChangeParameters::getChangeAt() const
+{
+	return changeAt;
+}

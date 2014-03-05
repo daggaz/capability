@@ -18,7 +18,7 @@ private:
 	const IStrategyCommand& command;
 public:
 	SimpleCommandFactory(const IStrategyCommand& command);
-	const IStrategyCommand& getCommand(const ICapability& oldCapability, const ICapability& newCapability, const IStrategyChangeParameters params) const;
+	const IStrategyCommand& getCommand(const ICapability& oldCapability, const ICapability& newCapability, const IStrategyChangeParameters& params) const;
 };
 
 #endif /* SIMPLECOMMANDFACTORY_H_ */

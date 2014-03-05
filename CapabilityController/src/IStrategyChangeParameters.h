@@ -9,6 +9,8 @@
 #define ISTRATEGYCHANGEPARAMETERS_H_
 
 class IStrategyChangeParameters {
+public:
+	virtual ~IStrategyChangeParameters() = 0;
 };
 
 #endif /* ISTRATEGYCHANGEPARAMETERS_H_ */

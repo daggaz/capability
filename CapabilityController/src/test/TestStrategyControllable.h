@@ -11,7 +11,7 @@
 #include "../IStrategyControllable.h"
 
 #include <string>
-#include "Thread.h"
+#include "../Thread.h"
 #include "../Queue.h"
 
 using namespace std;
@@ -28,8 +28,10 @@ public:
 
 class TestStrategyControllable : public IStrategyControllable, public Thread {
 private:
-	string name;
 	Queue<const StrategyChangeEvent*> queue;
+protected:
+	string name;
+	virtual bool doChangeStrategy(const StrategyChangeEvent *event);
 public:
 	TestStrategyControllable(string name);
 	virtual void changeStrategy(const IStrategyCommand& command, const IStrategyChangeParameters& params, const Row* responseObject, Queue<const Row*>& responseQueue);

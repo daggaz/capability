@@ -9,13 +9,14 @@
 #include "CapabilityController.h"
 #include <iostream>
 #include <algorithm>
+#include "Thread.h"
 
 CapabilityController::CapabilityController(const vector<const Row*>& table) : AbstractCapabilityController(table) {
 }
 
 void CapabilityController::changeCapability(const ICapability& capability, const IStrategyChangeParameters& params) {
 	vector<const Row*> unrequested(table), requested, completed;
-	cout << "Changing to capability " << capability.toString() << endl;
+	cout << "CCF: Changing to capability " << capability.toString() << endl;
 	while (!unrequested.empty() || !requested.empty()) {
 		vector<const Row*> temp_vector(unrequested);
 		for(vector<const Row*>::const_iterator row_it = temp_vector.begin(); row_it != temp_vector.end(); ++row_it) {
@@ -52,17 +53,19 @@ void CapabilityController::changeCapability(const ICapability& capability, const
 
 			// If this row is not mentioned in either unrequested or requested, then we can proceed
 			if (unsatified.empty()) {
+				cout << "CCF: sending changeStrategy to " << row->receiver.toString() << endl;
 				unrequested.erase(remove(unrequested.begin(), unrequested.end(), row), unrequested.end());
 				requested.push_back(row);
 				const IStrategyCommandFactory* factory = row->capabilites.at(&capability);
 				const IStrategyCommand& command = factory->getCommand(*currentCapabilty, capability, params);
 				row->receiver.changeStrategy(command, params, row, queue);
 			} else {
-				cout << "leaving " << row->receiver.toString() << " as prerequisites ";
+				cout << "CCF: leaving " << row->receiver.toString() << " as prerequisites ";
 				for (vector<const IStrategyControllable*>::const_iterator unsatisfied_it = unsatified.begin(); unsatisfied_it != unsatified.end(); ++unsatisfied_it)
 					cout << (*unsatisfied_it)->toString() << ", ";
 				cout << "not satisfied" << endl;
 			}
+			Thread::sleep(100); // Have a little sleep to de-interlace output
 		}
 
 		const Row* complete = queue.pop();
@@ -71,5 +74,5 @@ void CapabilityController::changeCapability(const ICapability& capability, const
 		completed.push_back(complete);
 	}
 	currentCapabilty = &capability;
-	cout << "Capability changed to " << capability.toString() << endl;
+	cout << "CCF: Capability changed to " << capability.toString() << endl;
 }

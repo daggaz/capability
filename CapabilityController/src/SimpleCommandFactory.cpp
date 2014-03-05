@@ -11,6 +11,6 @@ SimpleCommandFactory::SimpleCommandFactory(const IStrategyCommand& command) : co
 
 }
 
-const IStrategyCommand& SimpleCommandFactory::getCommand(const ICapability& oldCapability, const ICapability& newCapability, const IStrategyChangeParameters params) const {
+const IStrategyCommand& SimpleCommandFactory::getCommand(const ICapability& oldCapability, const ICapability& newCapability, const IStrategyChangeParameters& params) const {
 	return command;
 }

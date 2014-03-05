@@ -14,7 +14,7 @@
 
 class IStrategyCommandFactory {
 public:
-	virtual const IStrategyCommand& getCommand(const ICapability& oldCapability, const ICapability& newCapability, const IStrategyChangeParameters params) const = 0;
+	virtual const IStrategyCommand& getCommand(const ICapability& oldCapability, const ICapability& newCapability, const IStrategyChangeParameters& params) const = 0;
 };
 
 #endif /* ISTRATEGYCOMMANDFACTORY_H_ */

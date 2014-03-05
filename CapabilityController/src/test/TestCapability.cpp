@@ -22,4 +22,4 @@ string TestCapability::toString() const {
 
 TestCapability TestCapability::A("A");
 TestCapability TestCapability::B("B");
-TestCapability TestCapability::C("C");
+TestCapability TestCapability::Shutdown("Shutdown");

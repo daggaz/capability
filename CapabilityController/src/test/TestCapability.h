@@ -24,7 +24,7 @@ public:
 
 	static TestCapability A;
 	static TestCapability B;
-	static TestCapability C;
+	static TestCapability Shutdown;
 };
 
 #endif /* TESTCAPABILITY_H_ */
