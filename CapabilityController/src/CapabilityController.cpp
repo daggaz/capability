@@ -20,34 +20,48 @@ void CapabilityController::changeCapability(const ICapability& capability, const
 		vector<const Row*> temp_vector(unrequested);
 		for(vector<const Row*>::const_iterator row_it = temp_vector.begin(); row_it != temp_vector.end(); ++row_it) {
 			const Row* row = *row_it;
+
 			// Search for prerequisites
 			vector<const IStrategyControllable*> unsatified;
-			for (vector<const IStrategyControllable*>::const_iterator prerequisite_it = row->prerequisists.begin(); prerequisite_it != row->prerequisists.end(); ++prerequisite_it) {
+
+			// Check if this row is mentioned in any unrequested row
+			for (vector<const Row*>::const_iterator unrequested_it = unrequested.begin(); unrequested_it != unrequested.end(); ++unrequested_it) {
 				bool found = false;
-				const IStrategyControllable* prerequisite = *prerequisite_it;
-				for (vector<const Row*>::const_iterator completed_it = completed.begin(); completed_it != completed.end(); ++completed_it) {
-					const Row* complete = *completed_it;
-					if (&(complete->receiver) == prerequisite)
+				const Row* unrequested_row = *unrequested_it;
+				for (vector<const IStrategyControllable*>::const_iterator prerequisite_it = unrequested_row->prerequisists.begin(); prerequisite_it != unrequested_row->prerequisists.end(); ++prerequisite_it) {
+					const IStrategyControllable* prerequisite = *prerequisite_it;
+					if (&(row->receiver) == prerequisite)
 						found = true;
 				}
-				if (!found)
-					unsatified.push_back(prerequisite);
+				if (found)
+					unsatified.push_back(&unrequested_row->receiver);
 			}
 
-			// If unsatisfied
-			if (!unsatified.empty()) {
-				cout << "leaving " << row->receiver.toString() << " as prerequisites ";
-				for (vector<const IStrategyControllable*>::const_iterator unsatisfied_it = unsatified.begin(); unsatisfied_it != unsatified.end(); ++unsatisfied_it)
-					cout << (*unsatisfied_it)->toString() << ", ";
-				cout << "not satisfied" << endl;
+			// Check if this row is mentioned in any requested row
+			for (vector<const Row*>::const_iterator requested_it = requested.begin(); requested_it != requested.end(); ++requested_it) {
+				bool found = false;
+				const Row* requested_row = *requested_it;
+				for (vector<const IStrategyControllable*>::const_iterator prerequisite_it = requested_row->prerequisists.begin(); prerequisite_it != requested_row->prerequisists.end(); ++prerequisite_it) {
+					const IStrategyControllable* prerequisite = *prerequisite_it;
+					if (&(row->receiver) == prerequisite)
+						found = true;
+				}
+				if (found)
+					unsatified.push_back(&requested_row->receiver);
+			}
 
-			// If satisfied
-			} else {
+			// If this row is not mentioned in either unrequested or requested, then we can proceed
+			if (unsatified.empty()) {
 				unrequested.erase(remove(unrequested.begin(), unrequested.end(), row), unrequested.end());
 				requested.push_back(row);
 				const IStrategyCommandFactory* factory = row->capabilites.at(&capability);
 				const IStrategyCommand& command = factory->getCommand(*currentCapabilty, capability, params);
 				row->receiver.changeStrategy(command, params, row, queue);
+			} else {
+				cout << "leaving " << row->receiver.toString() << " as prerequisites ";
+				for (vector<const IStrategyControllable*>::const_iterator unsatisfied_it = unsatified.begin(); unsatisfied_it != unsatified.end(); ++unsatisfied_it)
+					cout << (*unsatisfied_it)->toString() << ", ";
+				cout << "not satisfied" << endl;
 			}
 		}
 
